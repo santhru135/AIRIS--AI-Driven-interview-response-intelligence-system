@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIRIS - AI Interview Practice System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 AIRIS</h1>
+            <p>AI Interview Practice System</p>
+        </header>
+
+        <!-- Interview Type Selection -->
+        <div id="type-selection" class="section">
+            <h2>Choose Interview Type</h2>
+            <div class="button-group">
+                <button id="hr-btn" class="btn btn-primary">HR Interview</button>
+                <button id="technical-btn" class="btn btn-secondary">Technical Interview</button>
+            </div>
+        </div>
+
+        <!-- Technology Selection (shown only for Technical) -->
+        <div id="tech-selection" class="section hidden">
+            <h2>Select Technology</h2>
+            <div class="button-group">
+                <button id="python-btn" class="btn btn-tech">Python</button>
+                <button id="fastapi-btn" class="btn btn-tech">FastAPI</button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-section" class="section hidden">
+            <h2 id="question-title">Interview Question</h2>
+            <div id="question-display" class="question-box"></div>
+
+            <div class="answer-section">
+                <label for="answer-input">Your Answer:</label>
+                <textarea id="answer-input" rows="6" placeholder="Type your answer here..."></textarea>
+                <button id="submit-btn" class="btn btn-success">Submit Answer</button>
+            </div>
+        </div>
+
+        <!-- Feedback Display -->
+        <div id="feedback-section" class="section hidden">
+            <h2>AI Feedback</h2>
+            <div id="feedback-content"></div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <!-- Error Display -->
+        <div id="error-message" class="error hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
