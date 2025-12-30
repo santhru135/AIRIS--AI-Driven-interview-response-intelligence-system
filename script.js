@@ -1,6 +1,6 @@
 // AIRIS - AI Interview Practice System Frontend Logic
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'http://localhost:8001';
 
 // DOM Elements
 const typeSelection = document.getElementById('type-selection');

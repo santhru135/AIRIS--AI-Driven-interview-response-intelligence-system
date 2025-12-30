@@ -121,11 +121,11 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
             if not line:
                 continue
                 
-            # Check for section headers
-            if '**What was good:**' in line or 'good:' in line.lower():
+            # Check for section headers (updated to match AI output format)
+            if '**Strengths:**' in line or 'strengths:' in line.lower():
                 current_section = 'strengths'
                 continue
-            elif '**What could be improved:**' in line or 'improve' in line.lower():
+            elif '**Weaknesses:**' in line or 'weaknesses:' in line.lower():
                 current_section = 'weaknesses' 
                 continue
             elif '**Suggestions' in line or 'suggestions' in line.lower():
@@ -133,8 +133,8 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
                 continue
                 
             # If we're in a section and this is a bullet point, add it
-            if current_section and line.startswith('-'):
-                clean_line = line[1:].strip()  # Remove the dash
+            if current_section and (line.startswith('*') or line.startswith('-')):
+                clean_line = line[1:].strip() if line.startswith('*') or line.startswith('-') else line.strip()
                 if current_section == 'strengths':
                     strengths.append(clean_line)
                 elif current_section == 'weaknesses':

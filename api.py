@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 from main import evaluate_answer, generate_question
 from questions import get_interview_types, get_hr_question, get_technical_question
 
@@ -23,7 +24,7 @@ class TechnologySelection(BaseModel):
 
 class EvaluationRequest(BaseModel):
     interview_type: str  # "HR" or "Technical"
-    technology: str = None  # "Python", "FastAPI", or None
+    technology: Optional[str] = None  # "Python", "FastAPI", or None
     question: str
     answer: str
 
