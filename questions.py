@@ -43,6 +43,62 @@ interview_questions = {
                 "question": "Explain dependency injection in FastAPI",
                 "category": "FastAPI"
             }
+        ],
+        "JavaScript": [
+            {
+                "question": "What is the difference between var, let, and const in JavaScript?",
+                "category": "JavaScript"
+            },
+            {
+                "question": "Explain closures in JavaScript",
+                "category": "JavaScript"
+            },
+            {
+                "question": "What are promises and how do they work?",
+                "category": "JavaScript"
+            }
+        ],
+        "React": [
+            {
+                "question": "What are React hooks and how do they work?",
+                "category": "React"
+            },
+            {
+                "question": "Explain the component lifecycle in React",
+                "category": "React"
+            },
+            {
+                "question": "How do you manage state in a React application?",
+                "category": "React"
+            }
+        ],
+        "SQL": [
+            {
+                "question": "What are the different types of JOINs in SQL?",
+                "category": "SQL"
+            },
+            {
+                "question": "Explain the difference between WHERE and HAVING clauses",
+                "category": "SQL"
+            },
+            {
+                "question": "What are indexes in SQL and why are they important?",
+                "category": "SQL"
+            }
+        ],
+        "Docker": [
+            {
+                "question": "What is Docker and why is it used?",
+                "category": "Docker"
+            },
+            {
+                "question": "Explain the difference between Docker images and containers",
+                "category": "Docker"
+            },
+            {
+                "question": "How do you optimize a Docker image for production?",
+                "category": "Docker"
+            }
         ]
     }
 }

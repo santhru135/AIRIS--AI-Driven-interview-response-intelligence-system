@@ -2,8 +2,12 @@ import os
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
-from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from dotenv import load_dotenv
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -11,7 +15,7 @@ load_dotenv()
 # Initialize NVIDIA Gemma LLM (free tier available)
 # Check if API key is available
 nvidia_api_key = os.getenv("NVIDIA_API_KEY")
-print(f"API Key found: {bool(nvidia_api_key)}")
+logger.info(f"NVIDIA API Key found: {bool(nvidia_api_key)}")
 if nvidia_api_key:
     try:
         llm = ChatNVIDIA(
@@ -19,40 +23,14 @@ if nvidia_api_key:
             temperature=0.7,
             api_key=nvidia_api_key
         )
-        print("LLM initialized successfully")
+        logger.info("LLM initialized successfully")
     except Exception as e:
-        print(f"Error initializing LLM: {e}")
-        print("Using mock responses for testing.")
+        logger.error(f"Error initializing LLM: {e}")
+        logger.info("Using mock responses for testing.")
         llm = None
 else:
-    print("Warning: NVIDIA_API_KEY not found. Using mock responses for testing.")
+    logger.warning("NVIDIA_API_KEY not found. Using mock responses for testing.")
     llm = None
-
-# Define the output schema for structured feedback
-response_schemas = [
-    ResponseSchema(name="strengths", description="List of strengths in the answer"),
-    ResponseSchema(name="weaknesses", description="List of weaknesses in the answer"),
-    ResponseSchema(name="suggestions", description="Improvement suggestions")
-]
-
-output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
-
-# Format instructions for the LLM
-format_instructions = output_parser.get_format_instructions()
-
-# Prompt template for evaluating interview answers
-evaluation_prompt = ChatPromptTemplate.from_template("""
-You are an expert interviewer evaluating a candidate's response to an interview question.
-
-Question: {question}
-
-Candidate's Answer: {user_answer}
-
-Evaluate the answer and provide structured feedback in the following format:
-{format_instructions}
-
-Be constructive, specific, and helpful. Focus on content quality, structure, and relevance.
-""")
 
 # Prompt template for evaluating interview answers
 evaluation_prompt = ChatPromptTemplate.from_template("""
@@ -85,6 +63,7 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
     """
     # Mock response for testing when API key is not available
     if not evaluation_chain:
+        logger.info("Using mock evaluation response")
         return {
             "strengths": [
                 "Clear and concise response",
@@ -103,7 +82,9 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
         }
     
     try:
+        logger.info("Calling AI for evaluation")
         response = evaluation_chain.run(question=question, user_answer=user_answer)
+        logger.info("AI evaluation response received")
         # Parse the response into structured feedback
         feedback_text = response.strip()
         
@@ -144,6 +125,7 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
         
         # Fallback if parsing failed
         if not strengths and not weaknesses and not suggestions:
+            logger.warning("Failed to parse AI response, using fallback")
             return {
                 "strengths": ["AI evaluation completed"],
                 "weaknesses": ["See suggestions for details"],
@@ -157,6 +139,7 @@ def evaluate_answer(question: str, user_answer: str) -> dict:
             "suggestions": suggestions if suggestions else ["Consider adding specific examples and technical depth"]
         }
     except Exception as e:
+        logger.error(f"AI evaluation failed: {str(e)}, falling back to mock")
         return {
             "strengths": ["Unable to evaluate due to error"],
             "weaknesses": [f"Error: {str(e)}"],

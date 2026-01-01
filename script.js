@@ -13,12 +13,15 @@ const errorMessage = document.getElementById('error-message');
 // Buttons
 const hrBtn = document.getElementById('hr-btn');
 const technicalBtn = document.getElementById('technical-btn');
-const pythonBtn = document.getElementById('python-btn');
-const fastapiBtn = document.getElementById('fastapi-btn');
 const submitBtn = document.getElementById('submit-btn');
 
 // Input
 const answerInput = document.getElementById('answer-input');
+
+// Landing elements
+const startBtn = document.getElementById('start-btn');
+const landing = document.querySelector('.landing');
+const appContainer = document.querySelector('.app-container');
 
 // State
 let currentInterviewType = null;
@@ -50,6 +53,27 @@ function showError(message) {
     }, 5000);
 }
 
+function updateProgress(step) {
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((s, index) => {
+        if (index + 1 <= step) {
+            s.classList.remove('bg-gray-300', 'text-gray-600');
+            s.classList.add('bg-green-500', 'text-white');
+        } else {
+            s.classList.remove('bg-green-500', 'text-white');
+            s.classList.add('bg-gray-300', 'text-gray-600');
+        }
+    });
+}
+
+function showApp() {
+    console.log('Starting app...');
+    hideSection(landing);
+    showSection(appContainer);
+    showSection(typeSelection);
+    updateProgress(1);
+}
+
 function resetUI() {
     hideSection(techSelection);
     hideSection(questionSection);
@@ -59,6 +83,7 @@ function resetUI() {
     currentInterviewType = null;
     currentTechnology = null;
     currentQuestion = null;
+    updateProgress(1);
 }
 
 // API Functions
@@ -88,6 +113,7 @@ async function selectInterviewType(type) {
         } else if (type === 'Technical') {
             // Show technology selection
             showTechnologySelection();
+            updateProgress(2);
         }
     } catch (error) {
         hideLoading();
@@ -158,9 +184,33 @@ async function submitAnswer() {
 }
 
 // UI Update Functions
-function showTechnologySelection() {
-    hideSection(typeSelection);
-    showSection(techSelection);
+async function showTechnologySelection() {
+    try {
+        const response = await fetch(`${API_BASE}/technologies`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const technologies = data.technologies;
+
+        // Clear existing buttons
+        const techButtons = document.getElementById('tech-buttons');
+        techButtons.innerHTML = '';
+
+        // Create buttons dynamically
+        technologies.forEach(tech => {
+            const button = document.createElement('button');
+            button.className = 'bg-gradient-to-r from-blue-400 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-500 hover:to-purple-600 transition duration-300';
+            button.textContent = tech;
+            button.addEventListener('click', () => selectTechnology(tech));
+            techButtons.appendChild(button);
+        });
+
+        hideSection(typeSelection);
+        showSection(techSelection);
+    } catch (error) {
+        showError(`Failed to load technologies: ${error.message}`);
+    }
 }
 
 function showQuestion(question, category) {
@@ -171,6 +221,7 @@ function showQuestion(question, category) {
     hideSection(typeSelection);
     hideSection(techSelection);
     showSection(questionSection);
+    updateProgress(3);
 }
 
 function showFeedback(feedback) {
@@ -180,10 +231,10 @@ function showFeedback(feedback) {
     // Strengths
     if (feedback.strengths && feedback.strengths.length > 0) {
         const strengthsDiv = document.createElement('div');
-        strengthsDiv.className = 'feedback-item strengths';
+        strengthsDiv.className = 'bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-4';
         strengthsDiv.innerHTML = `
-            <h4>✅ Strengths</h4>
-            <ul>
+            <h4 class="text-lg font-semibold text-green-800 mb-2">✅ Strengths</h4>
+            <ul class="list-disc list-inside text-gray-700">
                 ${feedback.strengths.map(item => `<li>${item}</li>`).join('')}
             </ul>
         `;
@@ -193,10 +244,10 @@ function showFeedback(feedback) {
     // Weaknesses
     if (feedback.weaknesses && feedback.weaknesses.length > 0) {
         const weaknessesDiv = document.createElement('div');
-        weaknessesDiv.className = 'feedback-item weaknesses';
+        weaknessesDiv.className = 'bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-4';
         weaknessesDiv.innerHTML = `
-            <h4>⚠️ Areas for Improvement</h4>
-            <ul>
+            <h4 class="text-lg font-semibold text-yellow-800 mb-2">⚠️ Areas for Improvement</h4>
+            <ul class="list-disc list-inside text-gray-700">
                 ${feedback.weaknesses.map(item => `<li>${item}</li>`).join('')}
             </ul>
         `;
@@ -206,10 +257,10 @@ function showFeedback(feedback) {
     // Suggestions
     if (feedback.suggestions && feedback.suggestions.length > 0) {
         const suggestionsDiv = document.createElement('div');
-        suggestionsDiv.className = 'feedback-item suggestions';
+        suggestionsDiv.className = 'bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-4';
         suggestionsDiv.innerHTML = `
-            <h4>💡 Suggestions</h4>
-            <ul>
+            <h4 class="text-lg font-semibold text-blue-800 mb-2">💡 Suggestions</h4>
+            <ul class="list-disc list-inside text-gray-700">
                 ${feedback.suggestions.map(item => `<li>${item}</li>`).join('')}
             </ul>
         `;
@@ -218,13 +269,17 @@ function showFeedback(feedback) {
 
     hideSection(questionSection);
     showSection(feedbackSection);
+    updateProgress(4);
 }
 
 // Event Listeners
+startBtn.addEventListener('click', showApp);
+const startBtnBottom = document.getElementById('start-btn-bottom');
+if (startBtnBottom) {
+    startBtnBottom.addEventListener('click', showApp);
+}
 hrBtn.addEventListener('click', () => selectInterviewType('HR'));
 technicalBtn.addEventListener('click', () => selectInterviewType('Technical'));
-pythonBtn.addEventListener('click', () => selectTechnology('Python'));
-fastapiBtn.addEventListener('click', () => selectTechnology('FastAPI'));
 submitBtn.addEventListener('click', submitAnswer);
 
 // Initialize

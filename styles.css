@@ -41,6 +41,28 @@ header p {
     opacity: 0.9;
 }
 
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.step {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    background: white;
+    color: #4facfe;
+    font-weight: bold;
+}
+
 .section {
     padding: 30px;
     border-bottom: 1px solid #eee;
@@ -237,4 +259,32 @@ h2 {
     .btn {
         width: 100%;
     }
+}
+
+/* Custom animations for landing page */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+    animation-delay: 0.4s;
+}
+
+.animation-delay-600 {
+    animation-delay: 0.6s;
 }
