@@ -188,9 +188,54 @@
             <div id="question-display" class="bg-gray-50 border-l-4 border-green-500 p-6 rounded-lg mb-6 text-lg"></div>
 
             <div class="answer-section">
-                <label for="answer-input" class="block text-lg font-semibold mb-2">Your Answer:</label>
-                <textarea id="answer-input" rows="6" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Type your answer here..."></textarea>
-                <button id="submit-btn" class="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-500 hover:to-blue-600 transition duration-300 mt-4">Submit Answer</button>
+                <div class="flex justify-between items-center mb-2">
+                    <label for="answer-input" class="block text-lg font-semibold">Your Answer:</label>
+                    <div id="recording-status" class="flex items-center text-sm text-gray-600">
+                        <span class="recording-indicator hidden">
+                            <span class="inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse mr-1"></span>
+                            Recording...
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Mic container for speech recognition compatibility message -->
+                <div class="mic-container mb-2"></div>
+                
+                <div class="relative">
+                    <textarea 
+                        id="answer-input" 
+                        rows="6" 
+                        class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-14 transition-all duration-200" 
+                        placeholder="Type your answer or use the mic to speak...">
+                    </textarea>
+                    <div class="absolute right-3 bottom-3 flex flex-col space-y-2">
+                        <button 
+                            id="mic-btn" 
+                            class="p-2 rounded-full bg-white hover:bg-gray-100 text-gray-600 hover:text-green-600 transition-colors duration-200 shadow-sm border border-gray-200"
+                            title="Click to start/stop recording">
+                            <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                        </button>
+                        <button 
+                            id="clear-btn"
+                            class="p-2 rounded-full bg-white hover:bg-gray-100 text-gray-600 hover:text-red-500 transition-colors duration-200 shadow-sm border border-gray-200"
+                            title="Clear text">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-2 flex justify-between items-center text-sm text-gray-500">
+                    <div id="recording-time" class="invisible">00:00</div>
+                    <div id="word-count" class="text-right">0 words</div>
+                </div>
+                
+                <button id="submit-btn" class="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-500 hover:to-blue-600 transition duration-300 mt-4 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    Submit Answer
+                </button>
             </div>
         </div>
 
